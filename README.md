@@ -1,5 +1,5 @@
 # mobile_robot: ROS2 SLAM and Navigation Robot
-mobile_robot is a custom-made robotics project built on ROS2 that is designed for autonomous navigation and environment mapping. It uses a 2D LiDAR sensor and odometry using the `slam_toolbox` to perform Serialized Localization and Mapping (SLAM). This allows the robot to build highly accurate maps of its surroundings and reliably navigate within them.
+`mobile_robot` is a custom-made robotics project built on ROS2 that is designed for autonomous navigation and environment mapping. It uses a 2D LiDAR sensor and odometry using the `slam_toolbox` to perform Serialized Localization and Mapping (SLAM). This allows the robot to build highly accurate maps of its surroundings and reliably navigate within them.
 
 ## Features:
 1. **2D Mapping (SLAM)**: Generates a detailed occupancy grid map of unknown environments in real-time.
@@ -24,6 +24,9 @@ sudo apt install ros-jazzy-ros-gz
 sudo apt install ros-jazzy-gazebo-ros-pkgs
 sudo apt install ros-jazzy-image-transport-plugins
 sudo apt install ros-jazzy-rqt-image-view
+sudo apt install ros-jazzy-ros2-control
+sudo apt install ros-jazzy-ros2-controllers
+sudo apt install ros-jazzy-gz-ros2-control
 sudo apt install ros-jazzy-slam-toolbox
 sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup
 sudo apt install ros-jazzy-twist-mux
@@ -46,4 +49,15 @@ export GZ_PARTITION=default
 export QT_QPA_PLATFORM=xcb
 source ~/ros2_ws/install/setup.bash
 export GZ_SIM_RESOURCE_PATH=~/my-local-models/
+```
+
+Go to `https://app.gazebosim.org/fuel/models` and search for `Construction Barrel`.
+![Screenshot of the Construction Barrel model in Gazebo.](/assets/construction_barrel_screenshot_1.jpeg)
+
+Add to your `~` folder (`/home` folder):
+```
+/home
+└── my-local-models/
+    ├── construction_barrel/    
+    └── construction_cone/    
 ```
