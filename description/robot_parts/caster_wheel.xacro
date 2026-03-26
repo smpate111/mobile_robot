@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- user-defined parameters for the wheel -->
+    <xacro:property name="wheel_radius" value="0.025"/>
+    <xacro:property name="wheel_mass" value="0.1"/>
+    <xacro:property name="I_wheel" value="${(2/5) * (wheel_mass) * (wheel_radius * wheel_radius)}"/>
+
+    <!-- wheel with user-defined parameters -->
+    <xacro:macro name="robot_caster_wheel" params="parent child x y z">
+        <!-- joint -->
+        <joint name="${parent}_to_${child}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}">
+            <!-- visual -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="${wheel_radius}"/>
+                </geometry>
+                <material name="green"/>
+            </visual>
+
+            <!-- collision -->
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="${wheel_radius}"/>
+                </geometry>
+            </collision>
+
+            <!-- inertia -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${wheel_mass}"/>
+                <inertia ixx="${I_wheel}"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="${I_wheel}"
+                        iyz="0.0"
+                        izz="${I_wheel}"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${child}">
+            <material>Gazebo/Green</material>
+            <mu1 value="0.001"/>
+            <mu2 value="0.001"/>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

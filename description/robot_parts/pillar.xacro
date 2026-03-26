@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- user-defined parameters for the pillar -->
+    <xacro:property name="pillar_radius" value="0.005"/>
+    <xacro:property name="pillar_length" value="0.0508"/>
+    <xacro:property name="pillar_mass" value="0.1"/>
+    <xacro:property name="I_pillar" value="${(1/12) * (pillar_mass) * ((3 * pillar_radius * pillar_radius) + (pillar_length * pillar_length))}"/>
+    <xacro:property name="Iz_pillar" value="${(1/2) * (pillar_mass) * (pillar_radius * pillar_radius)}"/>
+
+    <!-- pillar with user-defined parameters -->
+    <xacro:macro name="robot_pillar" params="parent child x y z row pitch yaw">
+        <!-- joint -->
+        <joint name="${child}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${row} ${pitch} ${yaw}"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}">
+            <!-- visual -->
+            <visual>
+                <origin xyz="0 0 ${pillar_length/2}" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="${pillar_radius}" length="${pillar_length}"/>
+                </geometry>
+                <material name="white"/>
+            </visual>
+
+            <!-- collision -->
+            <collision>
+                <origin xyz="0 0 ${pillar_length/2}" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="${pillar_radius}" length="${pillar_length}"/>
+                </geometry>
+            </collision>
+
+            <!-- inertia -->
+            <inertial>
+                <origin xyz="0 0 ${pillar_length/2}" rpy="0 0 0"/>
+                <mass value="${pillar_mass}"/>
+                <inertia ixx="${I_pillar}"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="${I_pillar}"
+                        iyz="0.0"
+                        izz="${Iz_pillar}"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${child}">
+            <material>Gazebo/White</material>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

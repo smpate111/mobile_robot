@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- user-defined parameters for the lidar -->
+    <xacro:property name="lidar_radius" value="0.05"/>
+    <xacro:property name="lidar_length" value="0.04"/>
+    <xacro:property name="lidar_mass" value="0.1"/>
+    <xacro:property name="I_lidar" value="${(1/12) * (lidar_mass) * ((3 * lidar_radius * lidar_radius) + (lidar_length * lidar_length))}"/>
+    <xacro:property name="Iz_lidar" value="${(1/2) * (lidar_mass) * (lidar_radius * lidar_radius)}"/>
+
+    <!-- lidar with user-defined parameters -->
+    <xacro:macro name="robot_lidar" params="parent child x y z row pitch yaw">
+
+        <!-- joint -->
+        <joint name="${child}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${row} ${pitch} ${yaw}"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}">
+            <!-- visual -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="${lidar_radius}" length="${lidar_length}"/>
+                </geometry>
+                <material name="red"/>
+            </visual>
+
+            <!-- collision -->
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="${lidar_radius}" length="${lidar_length}"/>
+                </geometry>
+            </collision>
+
+            <!-- inertia -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${lidar_mass}"/>
+                <inertia ixx="${I_lidar}"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="${I_lidar}"
+                        iyz="0.0"
+                        izz="${Iz_lidar}"/>
+            </inertial>
+        </link>
+
+        <!-- sensor -->
+        <gazebo reference="${child}">
+            <material>Gazebo/Red</material>
+
+            <sensor name="gpu_lidar" type="gpu_lidar">
+                <pose relative_to="${child}"> 0 0 0 0 0 0 </pose>
+                <visualize>true</visualize>
+                <update_rate>10</update_rate>
+                <always_on>1</always_on>
+
+                <lidar>
+                    <scan>
+                        <horizontal>
+                            <samples>360</samples>
+                            <min_angle>-3.14</min_angle>
+                            <max_angle>3.14</max_angle>
+                        </horizontal>
+                    </scan>
+
+                    <range>
+                        <min>0.1</min>
+                        <max>12</max>
+                    </range>
+                </lidar>
+
+                <topic>scan</topic>
+                <gz_frame_id>${child}</gz_frame_id>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

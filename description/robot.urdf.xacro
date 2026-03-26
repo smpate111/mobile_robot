@@ -1,7 +1,79 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="mobile_robot">
 
-    <!-- Example link -->
-    <link name="base_link"></link>
+    <xacro:arg name="use_ros2_control" default="true"/>
+
+    <!-- include other xacro files -->
+    <xacro:include filename="material_colors.xacro"/>
+    <xacro:include filename="robot_core.xacro"/>
+
+    <!-- Switch between ros2_control and Gazebo integrated diff-drive control -->
+    <xacro:if value="$(arg use_ros2_control)">
+        <xacro:include filename="ros2_control.xacro" />
+    </xacro:if>
+    <xacro:unless value="$(arg use_ros2_control)">
+        <xacro:include filename="gazebo_control.xacro" />
+    </xacro:unless>
+    
+    <xacro:include filename="robot_sensors/lidar.xacro"/>
+    <xacro:include filename="robot_sensors/camera.xacro"/>
+    <xacro:include filename="robot_sensors/depth_camera.xacro"/>
+
+
+
+    <!-- 
+        ##################################################
+            LIDAR sensor
+        ##################################################
+    -->
+    
+    <xacro:robot_lidar
+        parent="third_base_plate_link"
+        child="laser_frame"
+        x="0.174" y="0" z="0.025"
+        row="0" pitch="0" yaw="0"
+    />
+
+    <!-- 
+        ##################################################
+    -->
+ 
+
+    
+    <!-- 
+        ##################################################
+            Camera sensor
+        ##################################################
+    -->
+    
+    <xacro:robot_camera
+        parent="first_base_plate_link"
+        child="camera_frame"
+        x="0.2186" y="0" z="0.02"
+        row="0" pitch="0" yaw="0"
+    />
+
+    <!-- 
+        ##################################################
+    -->
+
+
+
+    <!-- 
+        ##################################################
+            Depth Camera sensor
+        ##################################################
+    -->
+    
+    <xacro:robot_depth_camera
+        parent="second_base_plate_link"
+        child="camera_depth_frame"
+        x="0.2186" y="0" z="0.02"
+        row="0" pitch="0" yaw="0"
+    />
+
+    <!-- 
+        ##################################################
+    -->
 
 </robot>

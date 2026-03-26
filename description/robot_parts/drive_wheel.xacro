@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- user-defined parameters for the wheel -->
+    <xacro:property name="wheel_radius" value="0.025"/>
+    <xacro:property name="wheel_length" value="0.02"/>
+    <xacro:property name="wheel_mass" value="0.1"/>
+    <xacro:property name="collision_radius" value="0.025"/>
+    <xacro:property name="I_wheel" value="${(1/12) * (wheel_mass) * ((3 * wheel_radius * wheel_radius) + (wheel_length * wheel_length))}"/>
+    <xacro:property name="Iz_wheel" value="${(1/2) * (wheel_mass) * (wheel_radius * wheel_radius)}"/>
+
+    <!-- wheel with user-defined parameters -->
+    <xacro:macro name="robot_wheel" params="parent child x y z row pitch yaw a b c">
+        <!-- joint -->
+        <joint name="${parent}_to_${child}_joint" type="continuous">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${row} ${pitch} ${yaw}"/>
+            <axis xyz="${a} ${b} ${c}"/>
+            <limit effort="10.0" velocity="40.0"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}">
+            <!-- visual -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <material name="blue"/>
+            </visual>
+
+            <!-- collision -->
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="${collision_radius}"/>
+                </geometry>
+            </collision>
+
+            <!-- inertia -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${wheel_mass}"/>
+                <inertia ixx="${I_wheel}"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="${I_wheel}"
+                        iyz="0.0"
+                        izz="${Iz_wheel}"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${child}">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

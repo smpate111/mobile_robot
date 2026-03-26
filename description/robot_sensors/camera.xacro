@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- user-defined parameters for the camera -->
+    <xacro:property name="camera_length" value="0.01"/>
+    <xacro:property name="camera_width" value="0.03"/>
+    <xacro:property name="camera_height" value="0.03"/>
+    <xacro:property name="camera_mass" value="0.1"/>
+    <xacro:property name="Ix_camera" value="${(1/12) * (camera_mass) * ((camera_height * camera_height) + (camera_width * camera_width))}"/>
+    <xacro:property name="Iy_camera" value="${(1/12) * (camera_mass) * ((camera_length * camera_length) + (camera_height * camera_height))}"/>
+    <xacro:property name="Iz_camera" value="${(1/12) * (camera_mass) * ((camera_length * camera_length) + (camera_width * camera_width))}"/>
+
+    <!-- camera with user-defined parameters -->
+    <xacro:macro name="robot_camera" params="parent child x y z row pitch yaw">
+
+        <!-- joint -->
+        <joint name="${child}_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${row} ${pitch} ${yaw}"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}">
+            <!-- visual -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${camera_length} ${camera_width} ${camera_height}"/>
+                </geometry>
+                <material name="grey"/>
+            </visual>
+
+            <!-- collision -->
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${camera_length} ${camera_width} ${camera_height}"/>
+                </geometry>
+            </collision>
+
+            <!-- inertia -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${camera_mass}"/>
+                <inertia ixx="${Ix_camera}"
+                        ixy="0.0"
+                        ixz="0.0"
+                        iyy="${Iy_camera}"
+                        iyz="0.0"
+                        izz="${Iz_camera}"/>
+            </inertial>
+        </link>
+
+        <!-- joint -->
+        <joint name="${child}_optical_joint" type="fixed">
+            <parent link="${child}"/>
+            <child link="${child}_optical"/>
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+        </joint>
+
+        <!-- link -->
+        <link name="${child}_optical"></link>
+
+        <gazebo reference="${child}">
+            <material>Gazebo/Grey</material>
+
+            <sensor name="camera" type="camera">
+                <pose relative_to="${child}"> 0 0 0 0 0 0 </pose>
+                <visualize>true</visualize>
+                <update_rate>10</update_rate>
+                <always_on>1</always_on>
+
+                <camera>
+                    <camera_info_topic>camera/camera_info</camera_info_topic>
+                    <horizontal_fov>1.089</horizontal_fov>
+
+                    <image>
+                        <format>R8G8B8</format>
+                        <width>1920</width>
+                        <height>1080</height>
+                    </image>
+
+                    <clip>
+                        <near>0.05</near>
+                        <far>8.0</far>
+                    </clip>
+                </camera>
+
+                <topic>camera/image_raw</topic>
+                <gz_frame_id>${child}_optical</gz_frame_id>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+</robot>
