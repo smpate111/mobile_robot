@@ -56,15 +56,19 @@ export GZ_SIM_RESOURCE_PATH=~/my-local-models/
 To be able to run the `obstacles.world` file in the Gazebo simulation, you will need to download some models onto your computer:
 
 1. Go to the [Gazebo Website](https://app.gazebosim.org/fuel/models) and search for `Construction Barrel`.
+
 ![Screenshot of the Construction Barrel model in Gazebo.](/assets/construction_barrel_screenshot_1.jpeg)
 
 2. Click on it and download the model.
+
 ![Screenshot of the Construction Barrel model download link.](/assets/construction_barrel_screenshot_2.jpeg)
 
 3. Once it's downloaded, head over to your `Download` folder and extract the contents from the `.zip` file.
+
 ![Screenshot of the Construction Barrel unzip button.](/assets/construction_barrel_screenshot_3.jpeg)
 
 4. After extracting the contents out of the `.zip` file, create a folder in your `/home` folder and name it `my-local-models`. Then, copy the `Construction Barrel` folder and paste it inside the `my-local-models` folder. Rename the `Construction Barrel` folder to `construction_barrel`.
+
 ![Screenshot of the construction_barrel folder.](/assets/construction_barrel_screenshot_4.jpeg)
 
 5. Repeat Steps 1-4 for the `Construction Cone`.
