@@ -51,13 +51,49 @@ source ~/ros2_ws/install/setup.bash
 export GZ_SIM_RESOURCE_PATH=~/my-local-models/
 ```
 
-Go to `https://app.gazebosim.org/fuel/models` and search for `Construction Barrel`.
+## Gazebo Models Installation:
+
+To be able to run the `obstacles.world` file in the Gazebo simulation, you will need to download some models onto your computer:
+
+1. Go to the [Gazebo Website](https://app.gazebosim.org/fuel/models) and search for `Construction Barrel`.
 ![Screenshot of the Construction Barrel model in Gazebo.](/assets/construction_barrel_screenshot_1.jpeg)
 
-Add to your `~` folder (`/home` folder):
+2. Click on it and download the model.
+![Screenshot of the Construction Barrel model download link.](/assets/construction_barrel_screenshot_2.jpeg)
+
+3. Once it's downloaded, head over to your `Download` folder and extract the contents from the `.zip` file.
+![Screenshot of the Construction Barrel unzip button.](/assets/construction_barrel_screenshot_3.jpeg)
+
+4. After extracting the contents out of the `.zip` file, create a folder in your `/home` folder and name it `my-local-models`. Then, copy the `Construction Barrel` folder and paste it inside the `my-local-models` folder. Rename the `Construction Barrel` folder to `construction_barrel`.
+![Screenshot of the construction_barrel folder.](/assets/construction_barrel_screenshot_4.jpeg)
+
+5. Repeat Steps 1-4 for the `Construction Cone`.
+
+What the folder structure should look like:
 ```
 /home
 └── my-local-models/
     ├── construction_barrel/    
     └── construction_cone/    
 ```
+
+## Usage:
+Open **3 terminals** in the following order:
+
+1. **Terminal 1 — Gazebo**:
+```
+ros2 launch mobile_robot launch_sim.launch.py use_ros2_control:=true
+```
+If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`.
+
+2. **Terminal 2 — Rviz**:
+```
+rviz2
+```
+Open the `robot.rviz` configuration file that is located in the `/home/ros2_ws/src/mobile_robot/config/rviz` folder.
+
+3. **Terminal 3 — Keyboard (OPTIONAL)**:
+```
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true -p use_sim_time:=true
+```
+This is to control the robot via keyboard.
