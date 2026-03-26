@@ -1,11 +1,20 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!--
+        ##################################################
+            include other xacro files
+        ##################################################
+    -->
 
-    <!-- include other xacro files -->
     <xacro:include filename="robot_parts/base_plate.xacro"/>
     <xacro:include filename="robot_parts/pillar.xacro"/>
     <xacro:include filename="robot_parts/drive_wheel.xacro"/>
     <xacro:include filename="robot_parts/caster_wheel.xacro"/>
+
+    <!-- 
+        ##################################################
+    -->
+
 
 
     <!-- 

@@ -1,3 +1,6 @@
+##################################################
+# LIBRARIES
+##################################################
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -9,17 +12,24 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 import xacro
+##################################################
+
 
 
 def generate_launch_description():
 
-    # Check if we're told to use sim time
+    ##################################################
+    # Check if we are using use_sim_time and ros2_control
+    ##################################################
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-
-    # Check if we are using ros2_control
     use_ros2_control = LaunchConfiguration('use_ros2_control')
+    ##################################################
 
+
+
+    ##################################################
     # Process the URDF file
+    ##################################################
     pkg_path = os.path.join(get_package_share_directory('mobile_robot'))
     xacro_file = os.path.join(pkg_path, 'description', 'robot.urdf.xacro')
 
@@ -30,8 +40,13 @@ def generate_launch_description():
             ' use_ros2_control:=', use_ros2_control
         ]
     )
+    ##################################################
     
+
+
+    ##################################################
     # Create a robot_state_publisher node
+    ##################################################
     params = {
         'robot_description': ParameterValue(robot_description_config, value_type=str),
         'use_sim_time': use_sim_time
@@ -43,9 +58,13 @@ def generate_launch_description():
         output='screen',
         parameters=[params]
     )
+    ##################################################
 
 
-    # Launch!
+
+    ##################################################
+    # Launch everything
+    ##################################################
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -63,3 +82,4 @@ def generate_launch_description():
             node_robot_state_publisher
         ]
     )
+    ##################################################

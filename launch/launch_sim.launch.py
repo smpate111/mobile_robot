@@ -1,4 +1,6 @@
-# === LIBRARIES ===
+##################################################
+# LIBRARIES
+##################################################
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -10,18 +12,27 @@ from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition
 
 from launch_ros.actions import Node
-# =================
+##################################################
+
+
 
 def generate_launch_description():
+    ##################################################
     # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
     # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
-
+    ##################################################
     package_name='mobile_robot' #<--- CHANGE ME
+    ##################################################
+
+
+
+    ##################################################
+    # Robot State Publisher
+    ##################################################
 
     # this is a switch for using ros2_control or diff drive
     use_ros2_control = LaunchConfiguration('use_ros2_control')
 
-    # create robot state publisher
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
                     [
@@ -33,8 +44,13 @@ def generate_launch_description():
                     'use_ros2_control': use_ros2_control
                 }.items()
     )
+    ##################################################
     
-    # create world
+
+
+    ##################################################
+    # Global Environment (World & Gazebo)
+    ##################################################
     world = LaunchConfiguration('world')
 
     world_arg = DeclareLaunchArgument(
@@ -44,7 +60,8 @@ def generate_launch_description():
         description='World to load'
         )
 
-    # Include the Gazebo launch file, provided by the ros_gz_sim package
+
+    # include the Gazebo launch file provided by the ros_gz_sim package
     gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config/yaml', 'gazebo_params.yaml')
 
     gazebo = IncludeLaunchDescription(
@@ -60,8 +77,16 @@ def generate_launch_description():
             'on_exit_shutdown': 'true'
         }.items()
     )
+    ##################################################
 
-    # Run the spawner node from the ros_gz_sim package. The entity name doesn't really matter if you only have a single robot.
+
+
+    ##################################################
+    # Spawn robot
+    ##################################################
+
+    # run the spawner node from the ros_gz_sim package
+    # NOTE: the entity name doesn't really matter if you only have a single robot.
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
@@ -72,8 +97,13 @@ def generate_launch_description():
         ],
         output='screen'
     )
+    ##################################################
 
+
+
+    ##################################################
     # Launch the ROS-Gazebo bridge for normal topics
+    ##################################################
     bridge_params = os.path.join(get_package_share_directory(package_name), 'config/yaml', 'gz_bridge.yaml')
 
     ros_gz_bridge = Node(
@@ -95,8 +125,11 @@ def generate_launch_description():
             "/depth_camera/image_raw"
         ]
     )
+    ##################################################
 
-    # ros2 control
+    ##################################################
+    # ros2_control configuration
+    ##################################################
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -124,8 +157,13 @@ def generate_launch_description():
         ],
         condition=IfCondition(use_ros2_control)
     )
+    ##################################################
 
-    # Launch them all!
+
+
+    ##################################################
+    # Launch everything
+    ##################################################
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -143,3 +181,4 @@ def generate_launch_description():
             joint_broad_spawner
         ]
     )
+    ##################################################
