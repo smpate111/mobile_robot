@@ -121,7 +121,7 @@ This is to control the robot via keyboard. If you want to use the `DiffDrive` pl
 
 **Terminal 3 — Gamepad**:
 ```
-ros2 launch mobile_robot joystick.launch.py use_ros2_control:=false
+ros2 launch mobile_robot joystick.launch.py use_sim_time:=true use_ros2_control:=true
 ```
 This is to control the robot via gamepad. If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`. Otherwise, leave it as `true` to use the `ros2_control` plugin.
 <br/><br/>
