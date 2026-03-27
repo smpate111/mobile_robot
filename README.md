@@ -88,9 +88,9 @@ What the folder structure should look like:
 ## Gamepad Installation:
 1. To use a gamepad to control the robot, you will need to ensure that it is plugged into your computer and your computer is able to recognize it.
 2. Run `evtest` and select the number that is assigned to the gamepad. Then, press any random input from the gamepad to see that the inputs are being registered in the terminal. `Ctrl+C` to exit once you are able to verify this.
-3. If you want to use a better visual interface, run `jstest-gtk` and select your gamepad. Verify that the inputs are being registered and record the left and right shoulder bumpers' (`L1` and `R1`) ID. Close out the GUI afterwards.
+3. If you want to use a better visual interface, run `jstest-gtk` and select your gamepad. Verify that the inputs are being registered and record the left and right shoulder buttons' (`L1` and `R1`) ID. Close out the GUI afterwards.
 4. To get the gamepad to work in ROS2, run `ros2 run joy joy_enumerate_devices` to find the gamepad's ID.
-5. Go to `joystick.yaml` in the `/home/ros2_ws/src/mobile_robot/config/yaml` folder and change the `device_id` value to the ID assigned to the gamepad. Also, change the `enable_button` value to the left bumper's ID and the `enable_turbo_button` value to the right bumper's ID.
+5. Go to `joystick.yaml` in the `/home/ros2_ws/src/mobile_robot/config/yaml` folder and change the `device_id` value to the ID assigned to the gamepad. Also, change the `enable_button` value to the left shoulder button's ID and the `enable_turbo_button` value to the right shoulder button's ID.
 
 ## Usage:
 Open **3 terminals** in the following order:

@@ -9,9 +9,10 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 ##################################################
 
 
@@ -30,7 +31,6 @@ def generate_launch_description():
     # Robot State Publisher
     ##################################################
     use_ros2_control = LaunchConfiguration('use_ros2_control')
-    
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -50,7 +50,6 @@ def generate_launch_description():
     # Global Environment (World & Gazebo)
     ##################################################
     world = LaunchConfiguration('world')
-
     world_arg = DeclareLaunchArgument(
         'world',
         #default_value="empty.sdf",
@@ -58,9 +57,7 @@ def generate_launch_description():
         description='World to load'
     )
 
-
     # include the Gazebo launch file provided by the ros_gz_sim package
-
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -87,12 +84,14 @@ def generate_launch_description():
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
+        output='screen',
         arguments=[
             '-topic', 'robot_description',
             '-name', 'mobile_robot',
+            '-x', '0.0',
+            '-y', '0.0',
             '-z', '0.1'
-        ],
-        output='screen'
+        ]
     )
     ##################################################
 
@@ -123,6 +122,8 @@ def generate_launch_description():
         ]
     )
     ##################################################
+
+
 
     ##################################################
     # ros2_control configuration
@@ -156,17 +157,18 @@ def generate_launch_description():
         package='twist_mux',
         executable='twist_mux',
         output='screen',
-        remappings={
+        remappings=[
             (
                 '/cmd_vel_out',
                 '/cmd_vel'
             )
-        },
+        ],
         parameters=[
             twist_mux_config,
             {
                 'use_sim_time': True,
                 'use_stamped': use_ros2_control
+                #'use_stamped': ParameterValue(use_ros2_control, value_type=bool)
             }
         ]
     )
