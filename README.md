@@ -27,9 +27,12 @@ sudo apt install ros-jazzy-rqt-image-view
 sudo apt install ros-jazzy-ros2-control
 sudo apt install ros-jazzy-ros2-controllers
 sudo apt install ros-jazzy-gz-ros2-control
+sudo apt install ros-jazzy-twist-mux
+sudo apt install joystick jstest-gtk evtest     # if you want to use a gamepad to control the robot
+sudo apt install ros-jazzy-joy ros-jazzy-teleop-twist-joy
+sudo apt install ros-jazzy-twist-stamper
 sudo apt install ros-jazzy-slam-toolbox
 sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup
-sudo apt install ros-jazzy-twist-mux
 ```
 
 ## Installation:
@@ -71,7 +74,8 @@ To be able to run the `obstacles.world` file in the Gazebo simulation, you will 
 
 ![Screenshot of the construction_barrel folder.](/assets/construction_barrel_screenshot_4.jpeg)
 
-5. Repeat Steps 1-4 for the `Construction Cone`.
+5. Repeat Steps 1-4 for the `Construction Cone` model.
+<br/><br/>
 
 What the folder structure should look like:
 ```
@@ -81,6 +85,13 @@ What the folder structure should look like:
     └── construction_cone/    
 ```
 
+## Gamepad Installation:
+1. To use a gamepad to control the robot, you will need to ensure that it is plugged into your computer and your computer is able to recognize it.
+2. Run `evtest` and select the number that is assigned to the gamepad. Then, press any random input from the gamepad to see that the inputs are being registered in the terminal. `Ctrl+C` to exit once you are able to verify this.
+3. If you want to use a better visual interface, run `jstest-gtk` and select your gamepad. Verify that the inputs are being registered and record the left and right shoulder bumpers' (`L1` and `R1`) ID. Close out the GUI afterwards.
+4. To get the gamepad to work in ROS2, run `ros2 run joy joy_enumerate_devices` to find the gamepad's ID.
+5. Go to `joystick.yaml` in the `/home/ros2_ws/src/mobile_robot/config/yaml` folder and change the `device_id` value to the ID assigned to the gamepad. Also, change the `enable_button` value to the left bumper's ID and the `enable_turbo_button` value to the right bumper's ID.
+
 ## Usage:
 Open **3 terminals** in the following order:
 
@@ -88,16 +99,29 @@ Open **3 terminals** in the following order:
 ```
 ros2 launch mobile_robot launch_sim.launch.py use_ros2_control:=true
 ```
-If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`.
+If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`. Otherwise, leave it as `true` to use the `ros2_control` plugin.
+<br/><br/>
 
 2. **Terminal 2 — Rviz**:
 ```
 rviz2
 ```
 Open the `robot.rviz` configuration file that is located in the `/home/ros2_ws/src/mobile_robot/config/rviz` folder.
+<br/><br/>
 
-3. **Terminal 3 — Keyboard (OPTIONAL)**:
+3. **Terminal 3 — Keyboard**:
 ```
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true -p use_sim_time:=true
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=true -r /cmd_vel:=/cmd_vel_keyboard -p use_sim_time:=true
 ```
-This is to control the robot via keyboard.
+This is to control the robot via keyboard. If you want to use the `DiffDrive` plugin, then set `stamped` to `false`. Otherwise, leave it as `true` to use the `ros2_control` plugin.
+<br/><br/>
+
+**OR**
+<br/><br/>
+
+**Terminal 3 — Gamepad**:
+```
+ros2 launch mobile_robot joystick.launch.py use_ros2_control:=false
+```
+This is to control the robot via gamepad. If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`. Otherwise, leave it as `true` to use the `ros2_control` plugin.
+<br/><br/>

@@ -21,14 +21,14 @@
             <max_wheel_acceleration>10.0</max_wheel_acceleration>
 
             <!-- input -->
-            <topic>cmd_vel</topic>
+            <topic>/cmd_vel</topic>
 
             <!-- output -->
             <tf_topic>/tf</tf_topic>
             <odom_topic>odom</odom_topic> 
             <frame_id>odom</frame_id>
             <child_frame_id>base_link</child_frame_id>
-            <odom_publisher_frequency>1000</odom_publisher_frequency>
+            <odom_publisher_frequency>30</odom_publisher_frequency>
         </plugin>
 
 
@@ -42,7 +42,6 @@
             <topic>joint_states</topic>
             <left_joint>base_link_to_left_wheel_link_joint</left_joint>
             <right_joint>base_link_to_right_wheel_link_joint</right_joint>
-            <update_rate>1000</update_rate>
         </plugin>
 
         <!-- 

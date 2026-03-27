@@ -29,20 +29,18 @@ def generate_launch_description():
     ##################################################
     # Robot State Publisher
     ##################################################
-
-    # this is a switch for using ros2_control or diff drive
     use_ros2_control = LaunchConfiguration('use_ros2_control')
-
+    
     rsp = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    [
-                        os.path.join(get_package_share_directory(package_name), 'launch', 'rsp.launch.py')
-                    ]
-                ),
-                launch_arguments={
-                    'use_sim_time': 'true',
-                    'use_ros2_control': use_ros2_control
-                }.items()
+        PythonLaunchDescriptionSource(
+            [
+                os.path.join(get_package_share_directory(package_name), 'launch', 'rsp.launch.py')
+            ]
+        ),
+        launch_arguments={
+            'use_sim_time': 'true',
+            'use_ros2_control': use_ros2_control
+        }.items()
     )
     ##################################################
     
@@ -58,11 +56,10 @@ def generate_launch_description():
         #default_value="empty.sdf",
         default_value=os.path.join(get_package_share_directory(package_name), 'worlds', 'obstacles.world'),
         description='World to load'
-        )
+    )
 
 
     # include the Gazebo launch file provided by the ros_gz_sim package
-    gazebo_params_file = os.path.join(get_package_share_directory(package_name), 'config/yaml', 'gazebo_params.yaml')
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -138,24 +135,40 @@ def generate_launch_description():
             '--controller-ros-args',
             '-r /diff_cont/cmd_vel:=/cmd_vel'
         ],
-        parameters=[
-            {
-                'use_sim_time': True
-            }
-        ],
-        condition=IfCondition(use_ros2_control)
+        condition=IfCondition(use_ros2_control),
     )
 
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_broad"],
+        condition=IfCondition(use_ros2_control),
+    )
+    ##################################################
+
+
+
+    ##################################################
+    # Twist mux for switching between input sources
+    ##################################################
+    twist_mux_config = os.path.join(get_package_share_directory(package_name), 'config/yaml', 'twist_mux.yaml')
+    twist_mux = Node(
+        package='twist_mux',
+        executable='twist_mux',
+        output='screen',
+        remappings={
+            (
+                '/cmd_vel_out',
+                '/cmd_vel'
+            )
+        },
         parameters=[
+            twist_mux_config,
             {
-                'use_sim_time': True
+                'use_sim_time': True,
+                'use_stamped': use_ros2_control
             }
-        ],
-        condition=IfCondition(use_ros2_control)
+        ]
     )
     ##################################################
 
@@ -178,7 +191,8 @@ def generate_launch_description():
             ros_gz_bridge,
             ros_gz_image_bridge,
             diff_drive_spawner,
-            joint_broad_spawner
+            joint_broad_spawner,
+            twist_mux,
         ]
     )
     ##################################################

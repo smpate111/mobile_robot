@@ -32,14 +32,6 @@ def generate_launch_description():
     ##################################################
     pkg_path = os.path.join(get_package_share_directory('mobile_robot'))
     xacro_file = os.path.join(pkg_path, 'description', 'robot.urdf.xacro')
-
-    #robot_description_config = xacro.process_file(xacro_file).toxml()
-    robot_description_config = Command(
-        [
-            'xacro ', xacro_file,
-            ' use_ros2_control:=', use_ros2_control
-        ]
-    )
     ##################################################
     
 
@@ -47,7 +39,16 @@ def generate_launch_description():
     ##################################################
     # Create a robot_state_publisher node
     ##################################################
+    #robot_description_config = xacro.process_file(xacro_file).toxml()
+    robot_description_config = Command(
+        [
+            'xacro ', xacro_file,
+            ' use_ros2_control:=', use_ros2_control
+        ]
+    )
+
     params = {
+        #'robot_description': robot_description_config,
         'robot_description': ParameterValue(robot_description_config, value_type=str),
         'use_sim_time': use_sim_time
     }
@@ -69,7 +70,7 @@ def generate_launch_description():
         [
             DeclareLaunchArgument(
                 'use_sim_time',
-                default_value='true',
+                default_value='false',
                 description='Use sim time if true'
             ),
 

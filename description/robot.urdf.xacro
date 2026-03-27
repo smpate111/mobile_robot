@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="mobile_robot">
+
+    <xacro:arg name="use_ros2_control" default="true"/>
+
     <!--
         ##################################################
             include other xacro files
@@ -21,14 +24,14 @@
         ##################################################
     -->
 
-    <xacro:arg name="use_ros2_control" default="true"/>
-
     <xacro:if value="$(arg use_ros2_control)">
-        <xacro:include filename="ros2_control.xacro" />
+        <xacro:include filename="ros2_control.xacro"/>
     </xacro:if>
     <xacro:unless value="$(arg use_ros2_control)">
-        <xacro:include filename="gazebo_control.xacro" />
+        <xacro:include filename="gazebo_control.xacro"/>
     </xacro:unless>
+    <!--<xacro:include filename="gazebo_control.xacro"/>-->
+    <!--<xacro:include filename="ros2_control.xacro"/>-->
 
     <!-- 
         ##################################################
