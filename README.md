@@ -125,3 +125,10 @@ ros2 launch mobile_robot joystick.launch.py use_sim_time:=true use_ros2_control:
 ```
 This is to control the robot via gamepad. If you want to use the `DiffDrive` plugin, then set `use_ros2_control` to `false`. Otherwise, leave it as `true` to use the `ros2_control` plugin.
 <br/><br/>
+
+4. **Terminal 4 — SLAM Toolbox**:
+```
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true slam_params_file:=./src/mobile_robot/config/yaml/mapper_params_online_async.yaml
+```
+This is to turn on the SLAM feature. Be sure to change the file path in the `map_file_name` in the `mapper_params_online_async.yaml` file to the file path of your computer. 
+<br/><br/>
