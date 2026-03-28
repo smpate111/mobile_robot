@@ -93,7 +93,7 @@ What the folder structure should look like:
 5. Go to `joystick.yaml` in the `/home/ros2_ws/src/mobile_robot/config/yaml` folder and change the `device_id` value to the ID assigned to the gamepad. Also, change the `enable_button` value to the left shoulder button's ID and the `enable_turbo_button` value to the right shoulder button's ID.
 
 ## Usage:
-Open **3 terminals** in the following order:
+Open **4 terminals** in the following order:
 
 1. **Terminal 1 — Gazebo**:
 ```
