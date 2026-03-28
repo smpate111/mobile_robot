@@ -130,5 +130,5 @@ This is to control the robot via gamepad. If you want to use the `DiffDrive` plu
 ```
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true slam_params_file:=./src/mobile_robot/config/yaml/mapper_params_online_async.yaml
 ```
-This is to turn on the SLAM feature. Be sure to change the file path in the `map_file_name` in the `mapper_params_online_async.yaml` file to the file path of your computer. 
+This is to turn on the SLAM feature. Be sure to change the file path in the `map_file_name` variable in the `mapper_params_online_async.yaml` file to the file path of your computer. If you don't want to use the map, then comment out the `map_file_name` and `map_start_at_dock` variables.
 <br/><br/>
