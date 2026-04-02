@@ -28,11 +28,11 @@ sudo apt install ros-jazzy-ros2-control
 sudo apt install ros-jazzy-ros2-controllers
 sudo apt install ros-jazzy-gz-ros2-control
 sudo apt install ros-jazzy-twist-mux
-sudo apt install joystick jstest-gtk evtest     # if you want to use a gamepad to control the robot
+sudo apt install joystick jstest-gtk evtest
 sudo apt install ros-jazzy-joy ros-jazzy-teleop-twist-joy
 sudo apt install ros-jazzy-twist-stamper
 sudo apt install ros-jazzy-slam-toolbox
-sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup
+sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup ros-jazzy-turtlebot3*
 ```
 
 ## Installation:
@@ -93,7 +93,7 @@ What the folder structure should look like:
 5. Go to `joystick.yaml` in the `/home/ros2_ws/src/mobile_robot/config/yaml` folder and change the `device_id` value to the ID assigned to the gamepad. Also, change the `enable_button` value to the left shoulder button's ID and the `enable_turbo_button` value to the right shoulder button's ID.
 
 ## Usage:
-Open **4 terminals** in the following order:
+Open **5 terminals** in the following order:
 
 1. **Terminal 1 — Gazebo**:
 ```
@@ -131,4 +131,11 @@ This is to control the robot via gamepad. If you want to use the `DiffDrive` plu
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true slam_params_file:=./src/mobile_robot/config/yaml/mapper_params_online_async.yaml
 ```
 This is to turn on the SLAM feature. Be sure to change the file path in the `map_file_name` variable in the `mapper_params_online_async.yaml` file to the file path of your computer. If you don't want to use the map, then comment out the `map_file_name` and `map_start_at_dock` variables.
+<br/><br/>
+
+5. **Terminal 5 — Nav2**:
+```
+ros2 launch nav2_bringup navigation_launch.py params_file:=./src/mobile_robot/config/yaml/nav2_params_stamped.yaml use_sim_time:=true
+```
+This is to turn on the navigation feature. If you want to use the `DiffDrive` plugin, then use the `nav2_params_unstamped.yaml` file. Otherwise, leave it as `nav2_params_stamped.yaml` to use the `ros2_control` plugin.
 <br/><br/>
